@@ -29,7 +29,7 @@ def main() -> None:
         
     MOD = 1_000_000_007
     
-    fact = [0] * 30
+    fact = [1] * 30
     for i in range(1, 30):
         fact[i] = (fact[i - 1] * i) % MOD
     
