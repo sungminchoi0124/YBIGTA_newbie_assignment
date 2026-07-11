@@ -63,46 +63,57 @@ import sys
 
 """
 TODO:
-- 일단 lib.py의 Trie Class부터 구현하기
+- 일단 Trie부터 구현하기
+- count 구현하기
 - main 구현하기
-
-힌트: 한 글자짜리 자료에도 그냥 str을 쓰기에는 메모리가 아깝다...
 """
 
 
+def count(trie: Trie, query_seq: str) -> int:
+    """
+    trie - 이름 그대로 trie
+    query_seq - 단어 ("hello", "goodbye", "structures" 등)
+
+    returns: query_seq의 단어를 입력하기 위해 버튼을 눌러야 하는 횟수
+    """
+    pointer = 0
+    cnt = 0
+
+    for element in query_seq:
+        if len(trie[pointer].children) > 1 or trie[pointer].is_end:
+            cnt += 1
+
+        new_index = -1 # 구현하세요!
+        for child in trie[pointer].children:
+            if trie[child].body == element:
+                new_index = child
+                break
+        pointer = new_index
+
+    return cnt + int(len(trie[0].children) == 1)
+
+
 def main() -> None:
-    """
-    이름을 배열하는 경우의 수를 출력
-    """
     # 구현하세요!
     input_data = sys.stdin.read().split()
     
-    N = int(input_data[0])
-    names = input_data[1:]
-    
-    trie: Trie[int] = Trie()
-    
-    for name in names:
-        seq = [ord(c) - 65 for c in name]
-        trie.push(seq)
+    idx = 0
+    while idx < len(input_data):
+        n = int(input_data[idx])
+        words = input_data[idx + 1 : idx + 1 + n]
         
-    MOD = 1_000_000_007
-    
-    fact = [1] * 30
-    for i in range(1, 30):
-        fact[i] = (fact[i - 1] * i) % MOD
-    
-    ans = 1
-    
-    for node in trie:
-        count = len(node.children)
-        
-        if node.is_end:
-            count += 1
-        
-        ans = (ans * fact[count]) % MOD
-        
-    print(ans)
+        trie: Trie[str] = Trie()
+        for word in words:
+            trie.push(word)
+            
+        clicks = 0
+        for word in words:
+            clicks += count(trie, word)
+
+        avg = clicks / n
+        print(f"{avg:.2f}")
+
+        idx += (n + 1)
 
 
 if __name__ == "__main__":
