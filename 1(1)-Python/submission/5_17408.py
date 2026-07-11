@@ -56,7 +56,6 @@ class SegmentTree(Generic[T, U]):
 
 
 import sys
-from __future__ import annotations
 
 """
 TODO:
